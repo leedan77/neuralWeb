@@ -19,6 +19,12 @@ class DropzoneDemo extends React.Component {
     req.end((err, res) => {
       if (err) console.log(err);
       console.log(res);
+      const f = this.state.files;
+      f.forEach((file, i) => {
+        f[i].sentence = res.body.result.imgblobs[i].candidate.text;
+      });
+      this.setState({ f });
+      // console.log(this.state.files);
     });
     /*
     files.forEach((file) => {
@@ -45,7 +51,11 @@ class DropzoneDemo extends React.Component {
         </Dropzone>
         {<div>
           <div>{this.state.files.map((file, i) =>
-            <img key={i} src={file.preview} alt={file.name} />)}</div>
+            <div key={i}>
+              <img src={file.preview} alt={file.name} />
+              <span>{file.sentence}</span>
+            </div>)}
+          </div>
         </div>}
       </div>
     );
