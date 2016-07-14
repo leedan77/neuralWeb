@@ -2,13 +2,25 @@ import { Router } from 'express';
 import multer from 'multer';
 import pythonShell from 'python-shell'
 import fs from 'fs';
+import http from 'https';
 
 const upload = multer({ dest: 'pic/' });
 const uploadRouter = new Router();
 
+function download(url, dest, cb) {
+  const file = fs.createWriteStream(dest);
+  const request = http.get(url, (response) => {
+    response.pipe(file);
+    file.on('finish', () => {
+      file.close(cb);  // close() is async, call cb after close completes.
+    });
+  }).on('error', (err) => { // Handle errors
+    fs.unlink(dest); // Delete the file async. (But we don't check the result)
+    if (cb) cb(err.message);
+  });
+};
 
-
-uploadRouter.post('/', upload.array('photo'), (req, res, next) => {
+function runPyScript() {
   const extractPath = 'neuraltalk/python_features'
   const extract_options = {
     mode: 'text',
@@ -22,6 +34,52 @@ uploadRouter.post('/', upload.array('photo'), (req, res, next) => {
     args: ['neuraltalk/cv/model_checkpoint_coco_visionlab43.stanford.edu_lstm_11.14.p', '-r', 'pic/']
   };
 
+  console.log('extracting...');
+  return new Promise((resolve, reject) => {
+    pythonShell.run(`${extractPath}/extract_features.py`, extract_options, (err, result) => {
+      if (err) console.log(err);
+      console.log('results: %j', result);
+      
+      console.log('predicting...');
+      pythonShell.run('predict_on_images.py', predict_options, (err, result) => {
+        if (err) console.log(err);
+        console.log('results: %j', result);
+
+        fs.readFile('pic/result_struct.json', (err, data) => {
+          if (err) console.log(err);
+          resolve({result: JSON.parse(data)});
+        });
+      });
+    });
+  });
+};
+
+
+uploadRouter.post('/', (req, res, next) => {
+  if (req.body.photoUrl !== undefined) {
+    const id = req.body.id;
+    const url = req.body.photoUrl;
+    const dest = `pic/${id}`;
+    
+    // write task file
+    const stream = fs.createWriteStream("pic/tasks.txt");
+    stream.write(`${id}`);
+    stream.end();
+
+    download(url, dest, (err) => {
+      if (err) console.log(err);
+      runPyScript()
+      .then(result => {
+        res.json(result);
+        res.end();
+      })
+    })
+  } else {
+    next();
+  }
+});
+
+uploadRouter.post('/', upload.array('photo'), (req, res, next) => {
   console.log(req.files);
 
   const stream = fs.createWriteStream("pic/tasks.txt");
@@ -32,30 +90,11 @@ uploadRouter.post('/', upload.array('photo'), (req, res, next) => {
 
   stream.end();
 
-  console.log('extracting...');
-  pythonShell.run(`${extractPath}/extract_features.py`, extract_options, (err, result) => {
-    if (err) console.log(err);
-    console.log('results: %j', result);
-    
-    console.log('predicting...');
-    pythonShell.run('predict_on_images.py', predict_options, (err, result) => {
-      if (err) console.log(err);
-      console.log('results: %j', result);
-
-      fs.readFile('pic/result_struct.json', (err, data) => {
-        if (err) console.log(err);
-        res.json({
-          result: JSON.parse(data)
-        });
-        res.end();
-      });
-    });
-  });
-  
-  
-  
-  
-  
+  runPyScript()
+  .then(result => {
+    res.json(result);
+    res.end();
+  })
   
 });
 
