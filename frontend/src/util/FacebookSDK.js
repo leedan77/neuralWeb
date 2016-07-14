@@ -11,6 +11,9 @@ class FacebookSDK {
     if (typeof window !== 'undefined') {
       this.init();
     }
+    this.photoFields = {
+      fields: 'place, images',
+    };
   }
 
   init() {
@@ -47,6 +50,36 @@ class FacebookSDK {
       scope: REQUIRED_SCOPES,
     });
   }
+
+  getTaggedPhotos() {
+    return new Promise((resolve, reject) => {
+      this.FB.api('/me/photos', this.photoFields, (res) => {
+        if (res.data !== undefined) {
+          resolve(res);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+
+  getUploadedPhotos() {
+    return new Promise((resolve, reject) => {
+      this.FB.api('/me/photos?type=uploaded', this.photoFields, (res) => {
+        if (res.data !== undefined) {
+          resolve(res);
+        } else {
+          reject(res);
+        }
+      });
+    });
+  }
+
+  getAllImages() {
+    return Promise.all([this.getTaggedPhotos(), this.getUploadedPhotos()]);
+  }
+
+
 }
 
 export default new FacebookSDK();

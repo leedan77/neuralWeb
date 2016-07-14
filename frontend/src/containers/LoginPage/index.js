@@ -4,6 +4,7 @@ import style from './style.scss';
 import FacebookBtn from '../../Components/FacebookBtn';
 import FacebookSDK from '../../util/FacebookSDK';
 import { signinSuccess, signinReject } from './action';
+import request from 'superagent';
 
 function handleLogin(e, dispatch) {
   e.preventDefault();
@@ -17,10 +18,35 @@ function handleLogin(e, dispatch) {
   });
 }
 
+function handlePhotos(e) {
+  e.preventDefault();
+  FacebookSDK.getAllImages()
+  .then((result) => {
+    console.log(result);
+    const file = result[0].data[0].images[2].source;
+    const id = result[0].data[0].id;
+    const req = request.post('http://localhost:3000/upload');
+    req.send({
+      photoUrl: file,
+      id,
+    });
+    req.end((err, res) => {
+      if (err) console.log(err);
+      console.log(res);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+}
+
 const LoginPage = ({ dispatch }) => (
   <div>
-    <FacebookBtn className={style.fbBtn} onClick={(e) => handleLogin(e, dispatch)}>
+    <FacebookBtn className={style.fbBtn} onClick={(e) => handleLogin(e)}>
       facebook 登入
+    </FacebookBtn>
+    <FacebookBtn className={style.fbBtn} onClick={(e) => handlePhotos(e, dispatch)}>
+      分析您的照片
     </FacebookBtn>
   </div>
 );
