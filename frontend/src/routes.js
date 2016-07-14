@@ -8,7 +8,7 @@ function loadModule(callback) {
 const routes = [{
   path: '/',
   getComponent(nextState, callback) {
-    require(['./containers/HomePage'], loadModule(callback));
+    require(['./containers/LoginPage'], loadModule(callback));
   },
 }, {
   path: '/page',

@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link, IndexLink } from 'react-router';
+/* eslint-disable no-unused-vars */
+import FacebookSDK from '../../util/FacebookSDK';
 import style from './style.css';
 import DropzoneDemo from '../Dropzone';
 
