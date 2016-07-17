@@ -8,8 +8,6 @@ import DropzoneDemo from '../Dropzone';
 
 const App = ({ message, children }) => (
   <div>
-    <div className={style.appTitle}>App</div>
-    <div className={style.appMessage}>{message}</div>
     <IndexLink to="/" activeClassName={style.active}>Home</IndexLink>
     <Link to="page" activeClassName={style.active}>Page</Link>
     <DropzoneDemo />
