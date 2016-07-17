@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import style from './style.scss';
 import FacebookBtn from '../../Components/FacebookBtn';
 import FacebookSDK from '../../util/FacebookSDK';
@@ -51,7 +52,9 @@ const LoginPage = ({ dispatch }) => (
         分析您的照片
       </FacebookBtn>
       <div className={style.sepLine}>或</div>
-      <button className={style.tryBtn}>搶先體驗我們的服務</button>
+      <button className={style.tryBtn}><Link className={style.link} to="page">
+        Page搶先體驗我們的服務
+      </Link></button>
     </div>
   </div>
 );

@@ -8,8 +8,8 @@ import style from './style.css';
 
 const App = ({ message, children }) => (
   <div>
-    <IndexLink to="/" activeClassName={style.active}>Home</IndexLink>
-    <Link to="page" activeClassName={style.active}>Page</Link>
+    <IndexLink to="/" className={style.link} activeClassName={style.active}>Home</IndexLink>
+    <Link to="page" className={style.link} activeClassName={style.active}>Page</Link>
     {children}
   </div>
 );
