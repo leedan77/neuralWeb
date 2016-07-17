@@ -19,9 +19,25 @@ const config = {
       loaders: ['babel', 'eslint'],
       include: path.join(__dirname, 'src')
     }, {
+      test: /\.css$/,
+      loaders: ['style', 'css'],
+      include: path.join(__dirname, 'assets/css')
+    }, {
       test: /\.css$|\.scss$/,
       loaders: ['style', 'css?modules&camelCase', 'postcss'],
       include: path.join(__dirname, 'src')
+    }, {
+      test: /\.png$/,
+      loader: 'url?mimetype=image/png',
+      include: path.join(__dirname, 'assets')
+    }, {
+      test: /\.jpg$/,
+      loader: 'url?mimetype=image/jpeg',
+      include: path.join(__dirname, 'assets')
+    }, {
+      test: /\.[ot]tf$/,
+      loader: 'url?limit=65000&mimetype=application/octet-stream',
+      include: path.join(__dirname, 'assets')
     }]
   },
   postcss: function() {

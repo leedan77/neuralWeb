@@ -5,6 +5,7 @@ import FacebookBtn from '../../Components/FacebookBtn';
 import FacebookSDK from '../../util/FacebookSDK';
 import { signinSuccess, signinReject } from './action';
 import request from 'superagent';
+// import img from '../../../assets/images/welcomePage.jpg';
 
 function handleLogin(e, dispatch) {
   e.preventDefault();
@@ -41,13 +42,17 @@ function handlePhotos(e) {
 }
 
 const LoginPage = ({ dispatch }) => (
-  <div>
-    <FacebookBtn className={style.fbBtn} onClick={(e) => handleLogin(e)}>
-      facebook 登入
-    </FacebookBtn>
-    <FacebookBtn className={style.fbBtn} onClick={(e) => handlePhotos(e, dispatch)}>
-      分析您的照片
-    </FacebookBtn>
+  <div className={style.loginHero}>
+    <div className={style.loginForm}>
+      <FacebookBtn className={style.fbBtn} onClick={(e) => handleLogin(e)}>
+        facebook 登入
+      </FacebookBtn>
+      <FacebookBtn className={style.fbBtn} onClick={(e) => handlePhotos(e, dispatch)}>
+        分析您的照片
+      </FacebookBtn>
+      <div className={style.sepLine}>或</div>
+      <button className={style.tryBtn}>搶先體驗我們的服務</button>
+    </div>
   </div>
 );
 

@@ -4,6 +4,7 @@ import { Router } from 'react-router';
 import routes from './routes';
 import App from './containers/App';
 import DevTools from './DevTools';
+import '../assets/css/base.css';
 
 const rootRoute = {
   component: App,
