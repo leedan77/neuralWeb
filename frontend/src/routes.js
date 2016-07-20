@@ -11,9 +11,14 @@ const routes = [{
     require(['./containers/LoginPage'], loadModule(callback));
   },
 }, {
-  path: '/page',
+  path: '/drop',
   getComponent(nextState, callback) {
-    require(['./containers/PageOne'], loadModule(callback));
+    require(['./containers/DropPage'], loadModule(callback));
+  },
+}, {
+  path: '/select',
+  getComponent(nextState, callback) {
+    require(['./containers/SelectPage'], loadModule(callback));
   },
 }];
 

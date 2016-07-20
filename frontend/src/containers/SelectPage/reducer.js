@@ -2,8 +2,7 @@ import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
 
 const initialState = fromJS({
-  token: null,
-  connected: false,
+  photos:
 });
 
 const reducer = handleActions({
@@ -11,10 +10,10 @@ const reducer = handleActions({
     state.withMutations(s => {
       s.set('token', fromJS(action.payload));
       s.set('connected', true);
-    })
+    });
   ),
-  SIGNIN_REJECT: (state) => (
-    state.set('connected', false)
+  SIGNIN_REJECT: (state, action) => (
+    state.set('connected', false);
   ),
 }, initialState);
 

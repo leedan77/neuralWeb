@@ -9,7 +9,8 @@ import style from './style.css';
 const App = ({ message, children }) => (
   <div>
     <IndexLink to="/" className={style.link} activeClassName={style.active}>Home</IndexLink>
-    <Link to="page" className={style.link} activeClassName={style.active}>Page</Link>
+    <Link to="drop" className={style.link} activeClassName={style.active}>Drop</Link>
+    <Link to="select" className={style.link} activeClassName={style.active}>Select</Link>
     {children}
   </div>
 );

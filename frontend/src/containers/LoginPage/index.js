@@ -20,7 +20,7 @@ function handleLogin(e, dispatch) {
   });
 }
 
-function handlePhotos(e) {
+function handlePhotos(e, dispatch) {
   e.preventDefault();
   FacebookSDK.getAllImages()
   .then((result) => {
@@ -33,7 +33,9 @@ function handlePhotos(e) {
       id,
     });
     req.end((err, res) => {
-      if (err) console.log(err);
+      if (err) {
+        console.log(err);
+      }
       console.log(res);
     });
   })
@@ -45,7 +47,7 @@ function handlePhotos(e) {
 const LoginPage = ({ dispatch }) => (
   <div className={style.loginHero}>
     <div className={style.loginForm}>
-      <FacebookBtn className={style.fbBtn} onClick={(e) => handleLogin(e)}>
+      <FacebookBtn className={style.fbBtn} onClick={(e) => handleLogin(e, dispatch)}>
         facebook 登入
       </FacebookBtn>
       <FacebookBtn className={style.fbBtn} onClick={(e) => handlePhotos(e, dispatch)}>
@@ -53,7 +55,7 @@ const LoginPage = ({ dispatch }) => (
       </FacebookBtn>
       <div className={style.sepLine}>或</div>
       <button className={style.tryBtn}><Link className={style.link} to="page">
-        Page搶先體驗我們的服務
+        搶先體驗我們的服務
       </Link></button>
     </div>
   </div>
