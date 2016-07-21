@@ -54,7 +54,7 @@ const LoginPage = ({ dispatch }) => (
         分析您的照片
       </FacebookBtn>
       <div className={style.sepLine}>或</div>
-      <button className={style.tryBtn}><Link className={style.link} to="page">
+      <button className={style.tryBtn}><Link className={style.link} to="drop">
         搶先體驗我們的服務
       </Link></button>
     </div>

@@ -2,19 +2,23 @@ import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
 
 const initialState = fromJS({
-  photos:
+  tagged: null,
+  uploaded: null,
 });
 
 const reducer = handleActions({
-  SIGNIN_SUCCESS: (state, action) => (
-    state.withMutations(s => {
-      s.set('token', fromJS(action.payload));
-      s.set('connected', true);
+  GET_PHOTO_SUCCESS: (state, action) => {
+    return state.withMutations(s => {
+      s.set('tagged', fromJS(action.payload[0]));
+      s.set('uploaded', fromJS(action.payload[1]));
     });
-  ),
-  SIGNIN_REJECT: (state, action) => (
-    state.set('connected', false);
-  ),
+  },
+  GET_PHOTO_FAIL: (state, action) => {
+    return state.withMutations(s => {
+      s.set('tagged', fromJS(action.payload));
+      s.set('uploaded', fromJS(action.payload));
+    });
+  },
 }, initialState);
 
 export default reducer;
