@@ -11,7 +11,6 @@ import request from 'superagent';
 function handleLogin(e, dispatch) {
   e.preventDefault();
   FacebookSDK.login((res) => {
-    console.log(res);
     if (res.status === 'connected') {
       dispatch(signinSuccess(res.authResponse.accessToken));
     } else {

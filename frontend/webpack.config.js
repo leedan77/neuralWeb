@@ -24,7 +24,7 @@ const config = {
       include: path.join(__dirname, 'assets/css')
     }, {
       test: /\.css$|\.scss$/,
-      loaders: ['style', 'css?modules&camelCase', 'postcss'],
+      loaders: ['style', 'css?module&camelCase', 'postcss'],
       include: path.join(__dirname, 'src')
     }, {
       test: /\.png$/,

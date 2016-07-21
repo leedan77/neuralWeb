@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import FacebookBtn from '../../Components/FacebookBtn';
+import PhotoCollection from './PhotoCollection';
 import FacebookSDK from '../../util/FacebookSDK';
 import style from './style.scss';
 import { getPhotoSuccess, getPhotoFail } from './action';
@@ -11,11 +12,10 @@ function handlePhotos(e, dispatch) {
   e.preventDefault();
   FacebookSDK.getAllImages()
   .then((result) => {
-    console.log(result);
     const file = result[0].data[0].images[2].source;
     const id = result[0].data[0].id;
     dispatch(getPhotoSuccess(result));
-    /*
+
     const req = request.post('http://localhost:3000/upload');
     req.send({
       photoUrl: file,
@@ -25,9 +25,8 @@ function handlePhotos(e, dispatch) {
       if (err) {
         console.log(err);
       }
-      console.log(res);
+      // console.log(res);
     });
-    */
   })
   .catch((err) => {
     // throw (err);
@@ -43,9 +42,14 @@ class SelectPage extends React.Component {
   constructor(props) {
     super(props);
   }
+  handleClick = (dispatch) => {
+    return (id) => {
+      console.log(id);
+    };
+    // dispatch(selectPhoto(id));
+  }
   render() {
     const { photos } = this.props;
-    console.log(photos);
     return (
       <div>
         <FacebookBtn className={style.fbBtn} onClick={(e) => handlePhotos(e, this.props.dispatch)}>
@@ -54,20 +58,8 @@ class SelectPage extends React.Component {
         <button className={style.tryBtn}><Link className={style.link} to="drop">
           上傳自己的照片
         </Link></button>
-        
-        {(photos.tagged != null) ?
-          <ul>{photos.tagged.data.map((photo, i) =>
-            <li key={i}>
-              <img src={photo.images[0].source} alt={photo.id} />
-            </li>
-        )}</ul> : null}
-
-        {(photos.uploaded != null) ?
-          <ul>{photos.uploaded.data.map((photo, i) =>
-            <li key={i}>
-              <img src={photo.images[0].source} alt={photo.id} />
-            </li>
-        )}</ul> : null}
+        <PhotoCollection photos={photos.tagged} handleClick={this.handleClick(this.props.dispatch)} />
+        <PhotoCollection photos={photos.uploaded} handleClick={this.handleClick(this.props.dispatch)} />
       </div>
     );
   }
