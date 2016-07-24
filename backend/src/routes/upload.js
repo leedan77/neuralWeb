@@ -56,24 +56,25 @@ function runPyScript() {
 
 
 uploadRouter.post('/', (req, res, next) => {
-  if (req.body.photoUrl !== undefined) {
-    const id = req.body.id;
-    const url = req.body.photoUrl;
-    const dest = `pic/${id}`;
-    
-    // write task file
+  console.log(req.body);
+  if (req.body[0].photoUrl !== undefined) {
     const stream = fs.createWriteStream("pic/tasks.txt");
-    stream.write(`${id}`);
+    const photos = req.body;
+    photos.forEach(p => {
+      const id = p.id;
+      const url = p.photoUrl;
+      const dest = `pic/${id}`;
+      stream.write(`${id}\n`);
+      download(url, dest, (err) => {
+        if (err) console.log(err);
+      });
+    });
     stream.end();
-
-    download(url, dest, (err) => {
-      if (err) console.log(err);
-      runPyScript()
-      .then(result => {
-        res.json(result);
-        res.end();
-      })
-    })
+    runPyScript()
+    .then(result => {
+      res.json(result);
+      res.end();
+    });
   } else {
     next();
   }
