@@ -5,28 +5,14 @@ import FacebookBtn from '../../Components/FacebookBtn';
 import PhotoCollection from './PhotoCollection';
 import FacebookSDK from '../../util/FacebookSDK';
 import style from './style.scss';
-import { getPhotoSuccess, getPhotoFail } from './action';
+import { getPhotoSuccess, getPhotoFail, selectPhoto } from './action';
 import request from 'superagent';
 
 function handlePhotos(e, dispatch) {
   e.preventDefault();
   FacebookSDK.getAllImages()
   .then((result) => {
-    const file = result[0].data[0].images[2].source;
-    const id = result[0].data[0].id;
     dispatch(getPhotoSuccess(result));
-
-    const req = request.post('http://localhost:3000/upload');
-    req.send({
-      photoUrl: file,
-      id,
-    });
-    req.end((err, res) => {
-      if (err) {
-        console.log(err);
-      }
-      // console.log(res);
-    });
   })
   .catch((err) => {
     // throw (err);
@@ -42,11 +28,21 @@ class SelectPage extends React.Component {
   constructor(props) {
     super(props);
   }
-  handleClick = (dispatch) => {
-    return (id) => {
-      console.log(id);
-    };
-    // dispatch(selectPhoto(id));
+  handleClick = (dispatch) => (
+    (id, url, category) => {
+      dispatch(selectPhoto(id, url, category));
+    }
+  )
+  handleSubmit = () => {
+    const selected = this.props.photos.selected;
+    const req = request.post('http://localhost:3000/upload');
+    req.send(selected);
+    req.end((err, res) => {
+      if (err) {
+        console.log(err);
+      }
+      // console.log(res);
+    });
   }
   render() {
     const { photos } = this.props;
@@ -58,18 +54,16 @@ class SelectPage extends React.Component {
         <button className={style.tryBtn}><Link className={style.link} to="drop">
           上傳自己的照片
         </Link></button>
-        <PhotoCollection photos={photos.tagged} handleClick={this.handleClick(this.props.dispatch)} />
-        <PhotoCollection photos={photos.uploaded} handleClick={this.handleClick(this.props.dispatch)} />
+        <button className={style.submitBtn} onClick={this.handleSubmit}>送出選取的照片</button>
+        <PhotoCollection photos={photos.tagged} category={"tagged"} handleClick={this.handleClick(this.props.dispatch)} />
+        <PhotoCollection photos={photos.uploaded} category={"uploaded"} handleClick={this.handleClick(this.props.dispatch)} />
       </div>
     );
   }
 }
 
 const mapStateToProp = (state) => ({
-  photos: {
-    tagged: (state.select.get('tagged') == null) ? null : state.select.get('tagged').toJS(),
-    uploaded: (state.select.get('uploaded') == null) ? null : state.select.get('uploaded').toJS(),
-  },
+  photos: state.select.toJS()
 });
 
 

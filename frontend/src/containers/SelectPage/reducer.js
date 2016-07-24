@@ -4,6 +4,7 @@ import { handleActions } from 'redux-actions';
 const initialState = fromJS({
   tagged: null,
   uploaded: null,
+  selected: [],
 });
 
 const reducer = handleActions({
@@ -19,6 +20,25 @@ const reducer = handleActions({
       s.set('uploaded', fromJS(action.payload));
     })
   ),
+  SELECT_PHOTO: (state, action) => {
+    const s = state.getIn([action.category, 'data']);
+    const idx = s.findIndex(photo => photo.get('id') === action.id);
+    const selected = s.getIn([idx, 'selected']);
+    const info = {
+      id: action.id,
+      photoUrl: action.url,
+    };
+    let newState;
+    if (selected === false || selected === undefined) {
+      newState = state.setIn([action.category, 'data', idx, 'selected'], true)
+      .update('selected', arr => arr.push(fromJS(info)));
+    } else {
+      const selectedIdx = state.get('selected').findIndex(i => i.get('id') === action.id);
+      newState = state.setIn([action.category, 'data', idx, 'selected'], false)
+      .update('selected', arr => arr.delete(selectedIdx));
+    }
+    return newState;
+  },
 }, initialState);
 
 export default reducer;
