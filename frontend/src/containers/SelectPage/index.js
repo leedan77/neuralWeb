@@ -5,7 +5,7 @@ import FacebookBtn from '../../Components/FacebookBtn';
 import PhotoCollection from './PhotoCollection';
 import FacebookSDK from '../../util/FacebookSDK';
 import style from './style.scss';
-import { getPhotoSuccess, getPhotoFail, selectPhoto } from './action';
+import { getPhotoSuccess, getPhotoFail, selectPhoto, submitPhoto } from './action';
 import request from 'superagent';
 
 function handlePhotos(e, dispatch) {
@@ -34,6 +34,7 @@ class SelectPage extends React.Component {
     }
   )
   handleSubmit = () => {
+    this.props.dispatch(submitPhoto());
     const selected = this.props.photos.selected;
     const req = request.post('http://localhost:3000/upload');
     req.send(selected);

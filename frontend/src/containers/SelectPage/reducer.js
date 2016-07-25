@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { fromJS, List } from 'immutable';
 import { handleActions } from 'redux-actions';
 
 const initialState = fromJS({
@@ -39,6 +39,13 @@ const reducer = handleActions({
     }
     return newState;
   },
+  SUBMIT_PHOTO: (state) => (
+    state.withMutations(s => {
+      s.updateIn(['tagged', 'data'], datas => datas.map(data => data.set('selected', false)));
+      s.updateIn(['uploaded', 'data'], datas => datas.map(data => data.set('selected', false)));
+      s.set('selected', List());
+    })
+  ),
 }, initialState);
 
 export default reducer;

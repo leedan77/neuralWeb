@@ -10,3 +10,5 @@ export const selectPhoto = (id, url, category) => ({
   url,
   category,
 });
+
+export const submitPhoto = createAction('SUBMIT_PHOTO');
