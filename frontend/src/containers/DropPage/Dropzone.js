@@ -11,7 +11,6 @@ class DropzoneDemo extends React.Component {
   }
   onDrop = (files) => {
     this.setState({ files });
-    console.log(files);
     const req = request.post('http://localhost:3000/upload');
     files.forEach((file) => {
       req.attach('photo', file);
@@ -26,22 +25,6 @@ class DropzoneDemo extends React.Component {
       this.setState({ f });
       // console.log(this.state.files);
     });
-    /*
-    files.forEach((file) => {
-      axios.post('http://localhost:3000/upload', file,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data;',
-          },
-        })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    });
-    */
   }
   render() {
     return (

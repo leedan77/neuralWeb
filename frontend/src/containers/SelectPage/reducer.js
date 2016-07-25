@@ -43,7 +43,7 @@ const reducer = handleActions({
     state.withMutations(s => {
       s.updateIn(['tagged', 'data'], datas => datas.map(data => data.set('selected', false)));
       s.updateIn(['uploaded', 'data'], datas => datas.map(data => data.set('selected', false)));
-      s.set('selected', List());
+      s.set('selected', new List());
     })
   ),
 }, initialState);

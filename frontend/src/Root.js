@@ -5,6 +5,7 @@ import routes from './routes';
 import App from './containers/App';
 import DevTools from './DevTools';
 import '../assets/css/base.css';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 const rootRoute = {
   component: App,
@@ -20,10 +21,12 @@ const renderDevTools = () => {
 
 const Root = ({ store, history }) => (
   <Provider store={store}>
-    <div>
-      <Router history={history} routes={rootRoute} />
-      {renderDevTools()}
-    </div>
+    <MuiThemeProvider>
+      <div>
+        <Router history={history} routes={rootRoute} />
+        {renderDevTools()}
+      </div>
+    </MuiThemeProvider>
   </Provider>
 );
 

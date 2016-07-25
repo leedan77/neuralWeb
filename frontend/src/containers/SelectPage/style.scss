@@ -35,6 +35,12 @@
   font-size: 15px;
 }
 
+.check-btn {
+  position: absolute;
+  right: -10px;
+  z-index: 100;
+}
+
 .link {
   color: white;
   text-decoration: none;
@@ -52,6 +58,10 @@
   }
 }
 
+.img-wrapper {
+  position: relative;
+}
+
 .photo {
   width: 300px;
   height: 300px;
@@ -60,11 +70,11 @@
   cursor: pointer;
 
   &:hover {
-    filter: brightness(50%);
+    filter: brightness(80%);
   }
 
   &.selected {
-    filter: brightness(50%);
+    filter: brightness(70%);
     outline-width: 5px;
     outline-color: green;
     outline-style: auto;
