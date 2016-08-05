@@ -1,26 +1,48 @@
 /* eslint-disable global-require */
+import LoginPage from './containers/LoginPage';
+
 function loadModule(callback) {
   return (componentModule) => {
     callback(null, componentModule.default);
   };
 }
 
-const routes = [{
-  path: '/',
-  getComponent(nextState, callback) {
-    require(['./containers/LoginPage'], loadModule(callback));
-  },
-}, {
-  path: '/drop',
-  getComponent(nextState, callback) {
-    require(['./containers/DropPage'], loadModule(callback));
-  },
-}, {
-  path: '/select',
-  getComponent(nextState, callback) {
-    require(['./containers/SelectPage'], loadModule(callback));
-  },
-}];
+function getRoute(store) {
+  const isLogin = () => (
+    store.getState().login.get('token')
+  );
+  return [{
+    path: '/',
+    indexRoute: {
+      component: LoginPage,
+    },
+    onEnter(nextState, replace) {
+      if (isLogin()) {
+        replace({
+          pathname: '/select',
+        });
+      }
+    },
+  }, {
+    path: '/drop',
+    getComponent(nextState, callback) {
+      require(['./containers/DropPage'], loadModule(callback));
+    },
+  }, {
+    path: '/select',
+    onEnter(nextState, replace) {
+      if (!isLogin()) {
+        replace({
+          pathname: '/',
+        });
+      }
+    },
+    getComponent(nextState, callback) {
+      require(['./containers/SelectPage'], loadModule(callback));
+    },
+  }];
+}
 
-export default routes;
+
+export default getRoute;
 

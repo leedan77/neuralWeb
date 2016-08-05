@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { push } from 'react-router-redux';
 import style from './style.scss';
 import FacebookBtn from '../../Components/FacebookBtn';
 import FacebookSDK from '../../util/FacebookSDK';
@@ -11,6 +12,7 @@ function handleLogin(e, dispatch) {
   FacebookSDK.login((res) => {
     if (res.status === 'connected') {
       dispatch(signinSuccess(res.authResponse.accessToken));
+      dispatch(push('/select'));
     } else {
       dispatch(signinReject());
     }
