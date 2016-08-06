@@ -9,7 +9,10 @@ const REQUIRED_SCOPES = [
 class FacebookSDK {
   constructor() {
     if (typeof window !== 'undefined') {
+      console.log('loading');
       this.init();
+    } else {
+      console.log('not loaded');
     }
     this.photoFields = {
       fields: 'place, images',
@@ -24,16 +27,6 @@ class FacebookSDK {
       document.body.insertBefore(root, document.body.childNodes[0]);
     }
 
-    // Run after Facebook SDK is ready
-    window.fbAsyncInit = () => {
-      window.FB.init({
-        appId: APP_ID,
-        xfbml: true,
-        version: SDK_VERSION,
-      });
-      this.FB = window.FB;
-    };
-
     (function asynLoad(d, s, id) {
       const fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) {
@@ -43,11 +36,35 @@ class FacebookSDK {
       js.src = '//connect.facebook.net/en_US/sdk.js';
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
+
+    // Run after Facebook SDK is ready
+    return new Promise((resolve) => {
+      window.fbAsyncInit = () => {
+        window.FB.init({
+          appId: APP_ID,
+          xfbml: true,
+          version: SDK_VERSION,
+        });
+        this.FB = window.FB;
+        resolve();
+      };
+    });
   }
 
   login(callback) {
     this.FB.login(callback, {
       scope: REQUIRED_SCOPES,
+    });
+  }
+
+  getLoginStatus() {
+    return this.init()
+    .then(() => {
+      return new Promise((resolve) => {
+        this.FB.getLoginStatus((res) => {
+          resolve(res);
+        });
+      });
     });
   }
 
@@ -78,8 +95,6 @@ class FacebookSDK {
   getAllImages() {
     return Promise.all([this.getTaggedPhotos(), this.getUploadedPhotos()]);
   }
-
-
 }
 
-export default new FacebookSDK();
+export default FacebookSDK;

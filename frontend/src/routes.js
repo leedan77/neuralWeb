@@ -9,7 +9,7 @@ function loadModule(callback) {
 
 function getRoute(store) {
   const isLogin = () => (
-    store.getState().login.get('token')
+    store.getState().login.get('connected')
   );
   return [{
     path: '/',
@@ -42,7 +42,6 @@ function getRoute(store) {
     },
   }];
 }
-
 
 export default getRoute;
 

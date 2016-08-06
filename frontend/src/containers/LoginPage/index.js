@@ -10,6 +10,7 @@ import { signinSuccess, signinReject } from './action';
 function handleLogin(e, dispatch) {
   e.preventDefault();
   FacebookSDK.login((res) => {
+    console.log(res);
     if (res.status === 'connected') {
       dispatch(signinSuccess(res.authResponse.accessToken));
       dispatch(push('/select'));

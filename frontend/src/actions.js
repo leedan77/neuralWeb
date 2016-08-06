@@ -8,4 +8,3 @@ export const routing = {
     return push(path);
   },
 };
-
