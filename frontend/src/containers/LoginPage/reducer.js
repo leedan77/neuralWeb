@@ -1,5 +1,6 @@
 import { fromJS } from 'immutable';
 import { handleActions } from 'redux-actions';
+import FacebookSDK from '../../util/FacebookSDK';
 
 const initialState = fromJS({
   token: null,
@@ -9,14 +10,15 @@ const initialState = fromJS({
 const reducer = handleActions({
   SIGNIN_SUCCESS: (state, action) => (
     state.withMutations(s => {
-      s.set('token', fromJS(action.payload));
+      s.set('token', action.token);
+      s.set('userID', action.userID);
       s.set('connected', true);
     })
   ),
   SIGNIN_REJECT: (state) => (
     state.set('connected', false)
   ),
-}, initialState);
+}, initialState)
 
 export default reducer;
 

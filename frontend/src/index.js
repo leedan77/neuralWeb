@@ -7,23 +7,27 @@ import Root from './Root';
 import configureStore from './store';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-const store = configureStore(browserHistory);
-const history = syncHistoryWithStore(browserHistory, store);
+// const store = configureStore(browserHistory);
+configureStore(browserHistory)
+.then(store => {
+  const history = syncHistoryWithStore(browserHistory, store);
 
-injectTapEventPlugin();
+  injectTapEventPlugin();
+  
+  render(
+    <Root store={store} history={history} />,
+    document.getElementById('root')
+  );
+  
+  if (module.hot) {
+    module.hot.accept('./Root', () => {
+      const NextRoot = require('./Root').default; // eslint-disable-line global-require
+      render(
+        <NextRoot store={store} history={history} />,
+        document.getElementById('root')
+      );
+    });
+  }
+})
 
-render(
-  <Root store={store} history={history} />,
-  document.getElementById('root')
-);
-
-if (module.hot) {
-  module.hot.accept('./Root', () => {
-    const NextRoot = require('./Root').default; // eslint-disable-line global-require
-    render(
-      <NextRoot store={store} history={history} />,
-      document.getElementById('root')
-    );
-  });
-}
 

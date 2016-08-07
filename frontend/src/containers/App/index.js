@@ -5,17 +5,20 @@ import { Link, IndexLink } from 'react-router';
 import FacebookSDK from '../../util/FacebookSDK';
 import { checkedLogin } from './actions';
 import style from './style.css';
-
+import cx from 'classnames';
 
 class App extends React.Component {
-  componentDidMount() {
-    const { dispatch } = this.props;
-    const fb = new FacebookSDK();
-    fb.getLoginStatus()
-    .then((res) => {
-      console.log(res);
-    });
-    dispatch(checkedLogin(fb));
+  renderButton() {
+    const { connected } = this.props;
+    if (connected) {
+      return (
+        <button className={style.link} onClick={this.handleClick}>登出</button>
+      )
+    } else {
+      return (
+        <button className={style.link} onClick={this.handleClick}>登入</button>
+      )
+    } 
   }
   render() {
     const { message, children } = this.props;
@@ -25,6 +28,7 @@ class App extends React.Component {
           <IndexLink to="/" className={style.link} activeClassName={style.active}>Home</IndexLink>
           <Link to="drop" className={style.link} activeClassName={style.active}>Drop</Link>
           <Link to="select" className={style.link} activeClassName={style.active}>Select</Link>
+          {this.renderButton()}
         </div>
         <div className={style.content}>
           {children}
@@ -42,6 +46,7 @@ App.propTypes = {
 
 const mapStateToProps = (state) => ({
   message: `${state.app.get('message')}, ${state.app.get('count')}`,
+  connected: state.login.connected,
 });
 
 export { App };
