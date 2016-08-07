@@ -15,13 +15,12 @@ function* checkedLogin({ fbSDK }) {
   }
 }
 
-function* logout() {
-  
+function* logout() { 
 }
 
 export default function* auth() {
   yield [
     takeEvery('CHECKED_LOGIN', checkedLogin),
-    takeEvery('LOGOUT', logout)
+    takeEvery('LOGOUT', logout),
   ];
 }

@@ -13,12 +13,12 @@ class App extends React.Component {
     if (connected) {
       return (
         <button className={style.link} onClick={this.handleClick}>登出</button>
-      )
+      );
     } else {
       return (
         <button className={style.link} onClick={this.handleClick}>登入</button>
-      )
-    } 
+      );
+    }
   }
   render() {
     const { message, children } = this.props;
@@ -42,6 +42,7 @@ App.propTypes = {
   message: PropTypes.string,
   children: PropTypes.node,
   dispatch: PropTypes.func,
+  connected: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({

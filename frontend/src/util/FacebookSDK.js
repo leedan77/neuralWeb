@@ -9,10 +9,7 @@ const REQUIRED_SCOPES = [
 class FacebookSDK {
   constructor() {
     if (typeof window !== 'undefined') {
-      console.log('loading');
       this.init();
-    } else {
-      console.log('not loaded');
     }
     this.photoFields = {
       fields: 'place, images',
@@ -59,13 +56,13 @@ class FacebookSDK {
 
   getLoginStatus() {
     return this.init()
-    .then(() => {
-      return new Promise((resolve) => {
+    .then(() => (
+      new Promise((resolve) => {
         this.FB.getLoginStatus((res) => {
           resolve(res);
         });
-      });
-    });
+      })
+    ));
   }
 
   getTaggedPhotos() {
@@ -97,4 +94,4 @@ class FacebookSDK {
   }
 }
 
-export default FacebookSDK;
+export default new FacebookSDK();

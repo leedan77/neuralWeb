@@ -4,18 +4,17 @@ import createSagaMiddleware from 'redux-saga';
 import reducer from './reducers';
 import rootSaga from './sagas';
 import DevTools from './DevTools';
-import FacebookSDK from './util/FacebookSDK';
+import fb from './util/FacebookSDK';
 
-const fb = new FacebookSDK();
 function getLoginState() {
   return fb.getLoginStatus()
-    .then(res => ({login:
-      {
-        token: res.authResponse.accessToken,
-        connected: true,
-        userID: res.authResponse.userID,
-      }
-    }));
+    .then(res => ({ login:
+    {
+      token: res.authResponse.accessToken,
+      connected: true,
+      userID: res.authResponse.userID,
+    },
+  }));
 }
 
 const sagaMiddleware = createSagaMiddleware();
@@ -34,18 +33,17 @@ export default function configureStore(history) {
       DevTools.instrument()
     )
     );
-  
+
     sagaMiddleware.run(rootSaga);
-  
+
     if (module.hot) {
       module.hot.accept('./reducers', () => {
         const nextReducer = require('./reducers').default; // eslint-disable-line global-require
         store.replaceReducer(nextReducer);
       });
     }
-  
+
     return store;
-  })
-  
+  });
 }
 

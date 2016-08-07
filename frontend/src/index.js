@@ -13,12 +13,10 @@ configureStore(browserHistory)
   const history = syncHistoryWithStore(browserHistory, store);
 
   injectTapEventPlugin();
-  
   render(
     <Root store={store} history={history} />,
     document.getElementById('root')
   );
-  
   if (module.hot) {
     module.hot.accept('./Root', () => {
       const NextRoot = require('./Root').default; // eslint-disable-line global-require
@@ -28,6 +26,4 @@ configureStore(browserHistory)
       );
     });
   }
-})
-
-
+});
