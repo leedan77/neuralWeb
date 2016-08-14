@@ -39,7 +39,7 @@ export function login(username, password) {
 export function createNewFBUser(email, token) {
   return FBUser.findOne({ email }).then((user) => {
     if (user) {
-      throw new Http400Error(`user "${email}" exists`);
+      return user;
     } else {
       const fbUser = new FBUser({
         email,

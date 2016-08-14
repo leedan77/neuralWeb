@@ -118,8 +118,11 @@ describe('User route', () => {
       return postWithError(url, {}, 400);
     });
 
-    it('should get an user exists error', () => {
-      return postWithError(url, { email: 'abc@gmail.com', token: '123' }, 400);
+    it('should return an user exist user', () => {
+      return axios.post(url, { email: 'abc@gmail.com', token: '123' })
+      .then(({ data }) => {
+        expect(data.success).to.be.true;
+      });
     });
 
     it('should get an email validation error', () => {
