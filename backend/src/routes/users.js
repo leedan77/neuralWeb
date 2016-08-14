@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { getAllUsers, createNewUser, login } from '../controllers/user';
+import { getAllUsers, createNewUser, login, createNewFBUser } from '../controllers/user';
 import { generateToken, verifyToken } from '../controllers/auth';
 import { loginRequired } from '../middlewares/auth';
 import { validateString } from '../core/utils';
+import { Http400Error } from '../core/error';
 
 const userRouter = new Router();
 
@@ -57,6 +58,25 @@ userRouter.get('/me', loginRequired, (req, res, next) => {
   })
   .catch((err) => {
     next(err);
+  });
+});
+
+userRouter.post('/fbsignup', (req, res, next) => {
+  const { email, token } = req.body;
+  validateString('email', email, { required: true });
+  validateString('token', token, { required: true });
+  createNewFBUser(email, token)
+  .then((fbUser) => {
+    res.status(200).json({
+      success: true,
+    })
+  })
+  .catch(err => {
+    if (err.errors && err.errors.email) {
+      next(new Http400Error('fields errors', err.errors));
+    } else {
+      next(err);
+    }
   });
 });
 

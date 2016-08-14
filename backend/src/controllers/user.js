@@ -1,5 +1,6 @@
 import User, { generateHash, validatePassword } from '../models/User';
 import { Http400Error } from '../core/error';
+import FBUser from '../models/FBUser';
 
 export function getAllUsers() {
   return User.find({});
@@ -32,6 +33,20 @@ export function login(username, password) {
       throw new Http400Error('password incorrect');
     }
     return user;
+  });
+}
+
+export function createNewFBUser(email, token) {
+  return FBUser.findOne({ email }).then((user) => {
+    if (user) {
+      throw new Http400Error(`user "${email}" exists`);
+    } else {
+      const fbUser = new FBUser({
+        email,
+        token,
+      });
+      return fbUser.save();
+    }
   });
 }
 

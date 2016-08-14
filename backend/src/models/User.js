@@ -15,4 +15,3 @@ export function validatePassword(input, password) {
 }
 
 export default mongoose.model('user', userSchema);
-

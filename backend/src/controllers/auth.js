@@ -1,6 +1,7 @@
 import { sign, verify } from 'jsonwebtoken';
 import { jwtSecret } from '../core/config';
 import { Http400Error } from '../core/error';
+import FBUser from '../models/FBUser';
 
 export function generateToken(user) {
   return new Promise((resolve, reject) => {
@@ -29,5 +30,9 @@ export function verifyToken(token) {
       }
     });
   });
+}
+
+export function getFBUser(email, token) {
+  return new Promise()
 }
 

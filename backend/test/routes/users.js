@@ -4,6 +4,7 @@ import { postWithError } from '../helper';
 import { start, stop } from '../../src/server';
 import { port } from '../../src/core/config';
 import User from '../../src/models/User';
+import FBUser from '../../src/models/FBUser';
 
 if (process.env.NODE_ENV !== 'test') {
   throw new Error('should run with NODE_ENV=test');
@@ -16,7 +17,10 @@ describe('User route', () => {
 
   before(() => {
     return start().then(() => {
-      return User.remove({});
+      return User.remove({})
+      .then(() => (
+        FBUser.remove({})
+      ));
     });
   });
 
@@ -98,6 +102,29 @@ describe('User route', () => {
         expect(data.username).to.equal('x');
       });
     });
+  });
+
+  describe('POST /users/fbsignup', () => {
+    const url = `${host}/users/fbsignup`;
+
+    it('should create a new user', () => {
+      return axios.post(url, { email: 'abc@gmail.com', token: '123' })
+      .then(({ data }) => {
+        expect(data.success).to.be.true;
+      });
+    });
+
+    it('should get an empty field error', () => {
+      return postWithError(url, {}, 400);
+    });
+
+    it('should get an user exists error', () => {
+      return postWithError(url, { email: 'abc@gmail.com', token: '123' }, 400);
+    });
+
+    it('should get an email validation error', () => {
+      return postWithError(url, { email: 'haha', token: '123' }, 400);
+    })
   });
 });
 
