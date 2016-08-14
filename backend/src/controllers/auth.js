@@ -33,6 +33,6 @@ export function verifyToken(token) {
 }
 
 export function getFBUser(email, token) {
-  return new Promise()
+  return FBUser.findOne({ email, token }).exec();
 }
 

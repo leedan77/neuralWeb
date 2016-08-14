@@ -1,5 +1,10 @@
 import { expect } from 'chai';
 import { generateToken, verifyToken } from '../../src/controllers/auth';
+import { start, stop } from '../../src/server';
+import { port } from '../../src/core/config';
+import { createNewFBUser } from '../../src/controllers/user';
+import { getFBUser } from '../../src/controllers/auth';
+import FBUser from '../../src/models/FBUser';
 
 describe('Auth controller', () => {
   describe('#generateToken', () => {
@@ -31,5 +36,35 @@ describe('Auth controller', () => {
       });
     });
   });
+
+  describe('#getFBUser', () => {
+
+    before(() => {
+      return start().then(() => {
+        return FBUser.remove({})
+          .then(() => (
+            createNewFBUser('valid@email.com', 'validtoken')
+          ));
+      });
+    });
+  
+    after(() => {
+      return FBUser.remove({})
+        .then(() => (
+          stop()
+        ));
+    });
+
+    it('should get fb user', () => {
+      return getFBUser('valid@email.com', 'validtoken')
+        .then(user => {
+          console.log(user);
+          expect(user).to.have.property('email').that.equals('valid@email.com');
+          expect(user).to.have.property('token').that.equals('validtoken');
+        });
+    });
+
+  });
+
 });
 
